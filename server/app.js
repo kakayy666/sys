@@ -1,32 +1,63 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const querystring = require('querystring')
+const handleBlogRouter = require('./src/routes/blog')
+const loginRouter = require('./login')
+const auth = require('./authorization')
+const app = require('express')()
+app.use("/api/login", loginRouter);
+app.use("/api/*", auth.verifyToken); // 注册token验证中间件
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const getPostData = (req) => {
+    const promise = new Promise((resolve, reject) => {
+        if(req.method !== 'POST')
+        {   
+            resolve({})
+            return
+        }
+        let postData = '';
+        req.on('data', chunk => {
+            postData += chunk.toString()
+        })
 
-var app = express();
+        req.on('end', () => {
+            if(!postData)
+            {
+                resolve({})
+                return
+            }
+            resolve(JSON.parse(postData))
+        })
+    })
+    return promise
+}
 
-var testRouter = require('./routes/test');
-app.use('/test', testRouter);
-
-app.all('*', function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With')
-  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
-  res.header('X-Powered-By', ' 3.2.1')
-  req.method == "OPTIONS" ? res.send(200) : next()
-})
- 
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-
-module.exports = app;
+const serverHandler = (req, res) => {
+    res.setHeader('Content-Type', 'application/json')
+    const url = req.url;
+    req.path = url.split('?')[0];
+    console.log('req.path',req.path)
+    // 解析query
+    req.query = querystring.parse(url.split('?')[1])
+    // 处理postData
+    getPostData(req).then((postData) => {
+        req.body = postData
+        // 处理blog路由
+        // console.log('req',req.body)
+        const blogDataPromise = handleBlogRouter(req, res)
+        if (blogDataPromise) {
+            blogDataPromise.then(blogData => {
+                res.end(
+                    JSON.stringify(blogData)
+                )
+            })
+            return
+        }
+        
+            
+       
+    res.writeHead(404, { 'Content-Type': 'text/plain' })
+    res.write('404 Not Found\n')
+    res.end()
+    })
+}
+    
+module.exports = serverHandler;
