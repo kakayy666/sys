@@ -1,10 +1,10 @@
 let MYSQL_CONFIG = {}
 MYSQL_CONFIG = {
-    host: 'localhost',
+    host: '47.100.180.85',
     user: 'root',
-    password: 'wzy123456',
-    port: '3306',
-    database: 'mydb'
+    password: 'QWERqwer123',
+    port: '5000',
+    database: 'test'
 }
 
 module.exports = {

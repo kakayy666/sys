@@ -1,6 +1,7 @@
 const { SuccessModel, ErrorModel } = require('../model/responseModel');
 const { getList,getDetail,createNewBlog,updateBlog } = require('../controller/blog');
 const handleBlogRouter = (req, res) => {
+    // console.log(req)
     const postData = req.body;
     const id = req.query.id || '';
     

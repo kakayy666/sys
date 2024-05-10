@@ -1,10 +1,8 @@
 const querystring = require('querystring')
+const express = require('express');
 const handleBlogRouter = require('./src/routes/blog')
-const loginRouter = require('./login')
-const auth = require('./authorization')
-const app = require('express')()
-app.use("/api/login", loginRouter);
-app.use("/api/*", auth.verifyToken); // 注册token验证中间件
+const handleLoginRouter = require('./src/routes/login')
+const app = express();
 
 const getPostData = (req) => {
     const promise = new Promise((resolve, reject) => {
@@ -38,18 +36,40 @@ const serverHandler = (req, res) => {
     // 解析query
     req.query = querystring.parse(url.split('?')[1])
     // 处理postData
-    getPostData(req).then((postData) => {
+getPostData(req).then((postData) => {
         req.body = postData
-        // 处理blog路由
-        // console.log('req',req.body)
-        const blogDataPromise = handleBlogRouter(req, res)
-        if (blogDataPromise) {
-            blogDataPromise.then(blogData => {
-                res.end(
-                    JSON.stringify(blogData)
-                )
-            })
-            return
+        
+        if (req.path.startsWith('/api/login')) { 
+            console.log('登录')
+            const loginDataPromise = handleLoginRouter(req, res)
+            //  console.log('loginDataPromise',loginDataPromise)
+            if (loginDataPromise) {
+                loginDataPromise.then(loginData => {
+                    res.end(
+                        JSON.stringify(loginData)
+                    )
+                })
+                return
+            }
+        }
+          const token = req.headers['authorization'];
+        // 验证 token 的合法性
+    if (req.path.startsWith('/api/blog')) {
+            if (!token) {
+            res.writeHead(401, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Unauthorized - Token not provided' }));
+            return;
+        }
+            // 处理blog路由
+            const blogDataPromise = handleBlogRouter(req, res)
+            if (blogDataPromise) {
+                blogDataPromise.then(blogData => {
+                    res.end(
+                        JSON.stringify(blogData)
+                    )
+                })
+                return
+            }
         }
         
             
@@ -59,5 +79,9 @@ const serverHandler = (req, res) => {
     res.end()
     })
 }
+app.use(serverHandler)
+
+
+
     
 module.exports = serverHandler;

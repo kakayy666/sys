@@ -1,13 +1,13 @@
 const {execSQL} = require('../db/mysql')
 
-const getList = (author, keyword) => {
+const getList = (author, name) => {
     let sql = `select * from blogs `;
     if (author) {
         console.log('author',author)
         sql += ` where author ='${author}' `
     }
-    if (keyword) {
-        sql += ` where  name like '%${keyword}%' `
+    if (name) {
+        sql += ` where  name like '%${name}%' `
     }
     return  execSQL(sql)
     // return [{
