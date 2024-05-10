@@ -38,6 +38,7 @@
 </template>
 <script>
 import { reactive, toRefs } from "@vue/reactivity";
+import { useRouter } from 'vue-router';
 import { ElMessage } from "element-plus";
 export default {
     setup() {
@@ -50,11 +51,13 @@ export default {
             rPassword: "",
             confirmPassword: "",
         });
-
+        const router = useRouter();
         // 方法
         // 登录
         function login() {
             console.log(form);
+            localStorage.setItem("isLoggedIn", "true")
+            router.push("/");
         }
         // 注册
         function register() {
