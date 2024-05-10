@@ -1,5 +1,5 @@
 const { SuccessModel, ErrorModel } = require('../model/responseModel');
-const { getList, updateBlog } = require('../controller/login');
+const { getList,createNewUser } = require('../controller/login');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const secretKey = crypto.randomBytes(32).toString('hex');
@@ -40,22 +40,15 @@ const handleLoginRouter = (req, res) => {
         })
     }
 
-    if(req.method==='POST' && req.path==='/api/blog/update')
-    {
-        const updateData = updateBlog(id,postData);
-        if(updateData)
-        {
-            return new SuccessModel('Updated Successfully');
-        } else {
-            return new ErrorModel('Update Failed');
-        }
-
-        console.log(req.body)
-        return {
-            message: '更新以下'
-        }
-    }
-
+    if (req.method === 'POST' && req.path === '/api/login/register') {
+        const registerData = createNewUser(postData)
+        return registerData.then((result) => {
+            return new SuccessModel(result);
+        }).catch((err) => {
+            return new ErrorModel(err);
+        })
+       
+}
     if(req.method==='POST' && req.path==='/api/blog/delete')
     {
         return {

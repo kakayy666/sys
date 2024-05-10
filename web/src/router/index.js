@@ -3,15 +3,20 @@ import HomeView from '../views/HomeView.vue'
 import Login from '../views/Login.vue'
 
 const routes = [
+   {
+    path: '/',
+    redirect: '/login'
+  },
   {
     path: '/login',
     name: 'login',
     component: Login
   },
   {
-    path: '/',
+    path: '/home',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    meta: { requiresAuth: true } // 添加这个meta标签，表示这个路由需要认证
   },
   // 其他路由...
 ]
@@ -21,17 +26,20 @@ const router = createRouter({
   routes
 })
 
-// 添加全局前置守卫
 router.beforeEach((to, from, next) => {
-  // 从本地存储中获取用户的登录状态
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
-  if (!isLoggedIn && to.name !== 'login') {
-    // 如果用户未登录且访问的不是登录页面，重定向到登录页面
-    next({ name: 'login' });
+  // 检查要进入的路由是否需要认证
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // 检查用户是否已经登录
+    if (localStorage.getItem('isLoggedIn')==='0') {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      });
+    } else {
+      next(); // 如果已经登录，正常跳转
+    }
   } else {
-    // 否则，允许访问
-    next();
+    next(); // 如果不需要认证，正常跳转
   }
 });
 
