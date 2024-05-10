@@ -2,11 +2,10 @@ import axios from 'axios';
 import { getToken } from './storage';
 
 
-const API_HOST = 'http:localhost/api'
+const API_HOST = 'http://localhost:3000/api'
 
 const SUCCESS_CODE = 200;
-// const TIMEOUT = 5000;
-const TIMEOUT = 20000;
+const TIMEOUT = 10000;
 
 export const instance = axios.create({
     baseURL: API_HOST,
@@ -29,7 +28,7 @@ instance.interceptors.request.use(
         // @ts-ignore
         // FIXME
         config.headers['Authorization'] = getToken();
-        console.log('requset_config', config);
+        // console.log('headers',config.headers);
         return config;
     },
     (error) => {
@@ -42,11 +41,11 @@ instance.interceptors.request.use(
 //   eslint-disable-next-line consistent-return
 instance.interceptors.response.use(
     (response) => {
-        console.log('response', response);
+        // console.log('response', response);
         if (response.status === 200) {
             const { data } = response;
             if (data.code === SUCCESS_CODE) {
-                console.log('reponse_data', data);
+                // console.log('reponse_data', data);
                 return data;
             }
             // return Promise.reject(data);

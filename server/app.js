@@ -3,7 +3,6 @@ const express = require('express');
 const handleBlogRouter = require('./src/routes/blog')
 const handleLoginRouter = require('./src/routes/login')
 const app = express();
-
 const getPostData = (req) => {
     const promise = new Promise((resolve, reject) => {
         if(req.method !== 'POST')
@@ -29,21 +28,34 @@ const getPostData = (req) => {
 }
 
 const serverHandler = (req, res) => {
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // 允许 Authorization 头
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+    // 如果是预检请求，直接返回状态码 200
+    if (req.method === 'OPTIONS') {
+        res.statusCode = 200;
+        res.end();
+        return;
+    }
     res.setHeader('Content-Type', 'application/json')
     const url = req.url;
     req.path = url.split('?')[0];
-    console.log('req.path',req.path)
+    console.log('req.path', req.path)
+    console.log('req.method', req.method)
     // 解析query
     req.query = querystring.parse(url.split('?')[1])
     // 处理postData
 getPostData(req).then((postData) => {
-        req.body = postData
-        
+
+    req.body = postData 
         if (req.path.startsWith('/api/login')) { 
             console.log('登录')
+            console.log('req',req.body)
             const loginDataPromise = handleLoginRouter(req, res)
             //  console.log('loginDataPromise',loginDataPromise)
-            if (loginDataPromise) {
+            if (loginDataPromise) { 
                 loginDataPromise.then(loginData => {
                     res.end(
                         JSON.stringify(loginData)
@@ -79,6 +91,7 @@ getPostData(req).then((postData) => {
     res.end()
     })
 }
+
 app.use(serverHandler)
 
 
