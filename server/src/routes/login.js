@@ -20,7 +20,7 @@ const handleLoginRouter = (req, res) => {
         })
         
     }
-    if(req.method==='POST' && req.path==='/api/login')
+    if(req.method==='POST' && req.path==='/api/login') 
     {
         const listData = getList();
         console.log('login', username, password)
@@ -46,8 +46,7 @@ const handleLoginRouter = (req, res) => {
             return new SuccessModel(result);
         }).catch((err) => {
             return new ErrorModel(err);
-        })
-       
+        })    
 }
     if(req.method==='POST' && req.path==='/api/blog/delete')
     {
@@ -55,8 +54,6 @@ const handleLoginRouter = (req, res) => {
             message: 'This is the deleted blog'
         }
     }
-
-
 }
 
 module.exports = handleLoginRouter;

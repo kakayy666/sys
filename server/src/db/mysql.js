@@ -1,36 +1,33 @@
 const mysql = require('mysql');
 const { MYSQL_CONFIG } = require('../config/db');
-const connection = mysql.createConnection(MYSQL_CONFIG);
 
-connection.connect();
+// 创建连接池而不是单个连接
+const pool = mysql.createPool({
+    ...MYSQL_CONFIG,
+    // 添加连接池选项
+    connectionLimit: 10, // 连接池大小
+});
 
-// const sql = `select * from blogs;`;
-// connection.query(sql, (err, result) => {
-//     if(err)
-//     {
-//         console.error(err);
-//         return
-//     }
-//     console.log('result',result)
-// })
-// function execSQL(sql,callback){
-//    connection.query(sql,callback)
-// }
+function execSQL(sql) {
+    return new Promise((resolve, reject) => {
+        pool.getConnection((err, connection) => {
+            if (err) {
+                reject(err);
+                return;
+            }
 
-function execSQL(sql){
-    const promise = new Promise((resolve,reject)=>{
-       connection.query(sql, (err, result) => {
-           if (err) {
-               reject(err)
-                console.error(err);
-                return}
-           resolve(result)
-        })
-    })
-
-    return promise
+            connection.query(sql, (err, result) => {
+                connection.release(); // 释放连接到连接池中
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(result);
+            });
+        });
+    });
 }
 
-module.exports ={
+module.exports = {
     execSQL
-}
+};
