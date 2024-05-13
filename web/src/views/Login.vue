@@ -52,7 +52,6 @@ import { reactive, toRefs } from "@vue/reactivity";
 import { useRouter } from 'vue-router';
 import { ElMessage } from "element-plus";
 import { Login, Register } from "../utils/api";
-localStorage.setItem("isLoggedIn", 0);
 export default {
     setup() {
         let vantaEffect = null
