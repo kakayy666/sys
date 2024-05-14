@@ -9,7 +9,6 @@
                 <div class="nameinput">
                     <Search @on-click="handleSearch"></Search>
                 </div>
-
             </div>
 
             <div class="datamsg">
@@ -44,22 +43,32 @@
 
         </div>
         <div class="rightboard">
-
+            <div class="server" v-show="openssh">
+                <SSHlinux></SSHlinux> 
+            </div>
+                    <el-button class="btn1" type="success" @click="sshserver">连接服务</el-button>
+                    <br />
+                    <el-button class="btn2" type="danger" @click="exitbtn">退出登录</el-button>
+            </div>
         </div>
-    </div>
 </template>
 
 <script setup>
 import Search from "../components/search.vue";
+import SSHlinux from "../components/sshlinux.vue"
 import { ElMessage } from "element-plus";
+import { ElButton } from 'element-plus';
 import { ref } from "vue";
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const cvemsg = ref({});
 const poc = ref('')
 const guide = ref('')
+const openssh = ref(true)
 function handleSearch(e) {
     console.log('传递成功', e)
-    // fetch(`/user_cve/${e}.json`)
-    fetch('/user_cve/CVE-2019-19391.json')
+    // fetch('/user_cve/CVE-2019-19391.json')
+    fetch(`/user_cve/${e}.json`)
         .then(res => {
             if (!res.ok) {
                 ElMessage.error('未查询到该编号的漏洞信息');
@@ -77,6 +86,14 @@ function handleSearch(e) {
         .catch(error => {
             console.error('An error occurred:', error);
         });
+}
+
+const sshserver = () => {
+   
+}
+const exitbtn = () => {
+    router.push('/login');
+    localStorage.setItem("isLoggedIn", 0);
 }
 </script>
 
@@ -102,11 +119,11 @@ function handleSearch(e) {
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
-    height: calc(95vh - 50px);
+    height: calc(100vh - 50px);
 }
 
 .leftboard {
-    flex: 2;
+    flex: 3;
     height: 100%;
     background-color: #f0f0f0;
 }
@@ -140,7 +157,47 @@ function handleSearch(e) {
 .rightboard {
     flex: 8;
     height: 100%;
-    background-color: yellow;
+    /* background-color: yellow; */
+}
+
+.btn1{
+    margin-top: 10px;
+    margin-left: 10px;
+    width: auto;
+    height: 40px;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    transition: .3s;
+}
+.btn2 {
+    margin-top: 10px;
+    margin-left: 10px;
+    right:0;
+    width: auto;
+    height: 40px;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    transition: .3s;
+}
+
+.server{
+    position: absolute;
+    width: calc(70%);
+    height: calc(100% - 50px);
+    background-color:  #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
 }
 
 
