@@ -117,6 +117,6 @@ input::-webkit-search-cancel-button {
 }
 
 .search-width-fill {
-  width: inherit;
+  width: 90%;
 }
 </style>
