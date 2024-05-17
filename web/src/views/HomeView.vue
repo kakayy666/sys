@@ -44,18 +44,19 @@
         </div>
         <div class="rightboard">
             <div class="server" v-show="openssh">
-                <SSHlinux></SSHlinux> 
+                <Terminal :CVE="CVE"></Terminal>
             </div>
-                    <el-button class="btn1" type="success" @click="sshserver">连接服务</el-button>
-                    <br />
-                    <el-button class="btn2" type="danger" @click="exitbtn">退出登录</el-button>
-            </div>
+            <el-button class="btn1" type="success" @click="sshserver">连接服务</el-button>
+            <br />
+            <el-button class="btn2" type="danger" @click="exitbtn">退出登录</el-button>
         </div>
+    </div>
 </template>
-
+<!-- lhkp-ksq74e0e -->
 <script setup>
 import Search from "../components/search.vue";
-import SSHlinux from "../components/sshlinux.vue"
+// import SSHlinux from "../components/sshlinux.vue"
+import Terminal from "../components/terminal.vue"
 import { ElMessage } from "element-plus";
 import { ElButton } from 'element-plus';
 import { ref } from "vue";
@@ -64,9 +65,11 @@ const router = useRouter();
 const cvemsg = ref({});
 const poc = ref('')
 const guide = ref('')
+const CVE = ref('')
 const openssh = ref(true)
 function handleSearch(e) {
     console.log('传递成功', e)
+    CVE.value = e
     // fetch('/user_cve/CVE-2019-19391.json')
     fetch(`/user_cve/${e}.json`)
         .then(res => {
