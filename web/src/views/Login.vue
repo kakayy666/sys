@@ -86,7 +86,7 @@ export default {
         // 方法
         // 登录
         function login() {
-            // console.log('form', form);
+            console.log('form', form);
             Login(form)
                 .then(res => {
                     if (res.errno !== 0) {
@@ -99,7 +99,9 @@ export default {
                     ElMessage.success('登录成功');
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("isLoggedIn", 1);
-                    router.push("/home");
+                    localStorage.setItem("username", form.username);
+                    
+                    router.push("/search");
                 })
                 .catch(error => {
                     console.error('Login failed:', error);

@@ -7,7 +7,7 @@
             <div class="searchbox">
                 <div class="name">CVE编号:</div>
                 <div class="nameinput">
-                    <Search @on-click="handleSearch"></Search>
+                    <Search @on-click="handleSearch" :cveid="CVE.value"></Search>
                 </div>
             </div>
 
@@ -46,9 +46,9 @@
             <div class="server" v-show="openssh">
                 <Terminal :CVE="CVE"></Terminal>
             </div>
-            <el-button class="btn1" type="success" @click="sshserver">连接服务</el-button>
+            <!-- <el-button class="btn1" type="success" @click="sshserver">连接服务</el-button>
             <br />
-            <el-button class="btn2" type="danger" @click="exitbtn">退出登录</el-button>
+            <el-button class="btn2" type="danger" @click="exitbtn">退出登录</el-button> -->
         </div>
     </div>
 </template>
@@ -59,8 +59,9 @@ import Search from "../components/search.vue";
 import Terminal from "../components/terminal.vue"
 import { ElMessage } from "element-plus";
 import { ElButton } from 'element-plus';
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from 'vue-router';
+// localStorage.setItem("isLoggedIn", 0);
 const router = useRouter();
 const cvemsg = ref({});
 const poc = ref('')
@@ -71,7 +72,7 @@ function handleSearch(e) {
     console.log('传递成功', e)
     CVE.value = e
     // fetch('/user_cve/CVE-2019-19391.json')
-    fetch(`/user_cve/${e}.json`)
+    fetch(`/S2VulnHub/user_cve/${e}.json`)
         .then(res => {
             if (!res.ok) {
                 ElMessage.error('未查询到该编号的漏洞信息');
@@ -91,13 +92,15 @@ function handleSearch(e) {
         });
 }
 
-const sshserver = () => {
-   
-}
 const exitbtn = () => {
     router.push('/login');
     localStorage.setItem("isLoggedIn", 0);
 }
+onMounted(() => {
+    CVE.value = router.currentRoute.value.query.CVE
+   console.log(router.currentRoute.value.query.CVE)
+   handleSearch(CVE.value)
+})
 </script>
 
 <style scoped>
@@ -197,8 +200,8 @@ const exitbtn = () => {
     position: absolute;
     width: calc(70%);
     height: calc(100% - 50px);
-    background-color:  #f0f0f0;
-    border: 1px solid #ccc;
+    /* background-color:  #f0f0f0; */
+    /* border: 1px solid #ccc; */
     border-radius: 5px;
 
 }

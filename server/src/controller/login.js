@@ -34,7 +34,7 @@ const createNewUser = (postData) => {
         }
     });
 }
-
+ 
 const updateBlog = (id, blogData = {}) => {
     console.log('id',id)
 

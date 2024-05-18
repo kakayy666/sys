@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Login from '../views/Login.vue'
-
+import Search from '../views/SearchView.vue'
 const routes = [
    {
     path: '/',
@@ -13,10 +13,16 @@ const routes = [
     component: Login
   },
   {
+    path: '/search',
+    name: 'search',
+    component: Search,
+    // meta: { requiresAuth: true } // 添加这个meta标签，表示这个路由需要认证
+  },
+  {
     path: '/home',
     name: 'home',
     component: HomeView,
-    meta: { requiresAuth: true } // 添加这个meta标签，表示这个路由需要认证
+    // meta: { requiresAuth: true } // 添加这个meta标签，表示这个路由需要认证
   },
   // 其他路由...
 ]

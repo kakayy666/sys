@@ -2,7 +2,8 @@
   <div class="app-container">
     <el-button class="btn" type="primary" @click="addTerm">连接服务</el-button>
     <el-button class="btn" type="primary" @click="delTerm">关闭连接</el-button>
-    <div style="padding-left: 10px; padding-right: 10px" class="termbox"></div>
+    <el-button class="btn" type="primary" @click="gobackhome">返回</el-button>
+    <div style="margin-top:15px; padding-left: 10px; padding-right: 10px" class="termbox"></div>
   </div>
 </template>
 
@@ -65,7 +66,6 @@ export default {
       // socket.on()用于监听获取服务端（后端）发送过来的数据, 第一个参数为监听的标识
       this.socket.on("termbox", (data) => {
         this.term.write(data)
-
       });
       window.addEventListener(
         "resize",
@@ -95,7 +95,6 @@ export default {
       }
 
       this.term = null;
-      this.fitAddon = null;
 
       const termbox = document.querySelector(".termbox");
       if (termbox) {
@@ -106,10 +105,25 @@ export default {
 
       this.socket = io("http://localhost:3000");
     },
+    gobackhome() {
+      this.delTerm();
+      this.$router.push("/search");
+    },
   },
   mounted() {
     this.socket = io("http://localhost:3000");
-  },
+    this.socket.on("serverClosed", (data) => {
+      console.log("serverClosed", data);
+      const termbox = document.querySelector(".termbox");
+      if (termbox) {
+        termbox.innerHTML = '';
+      }
+
+      this.isConnected = false;
+
+      this.socket = io("http://localhost:3000");
+    })
+  }
 };
 </script>
 

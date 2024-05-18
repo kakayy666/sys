@@ -31,6 +31,7 @@ function createNewServer(machineConfig, socket) {
         stream.write(command + '\n'); // 在流中写入命令
       });
       socket.on(msgId, function (data) {  
+        console.log("data",data);
         stream.write(data);
       });
 
@@ -45,6 +46,7 @@ function createNewServer(machineConfig, socket) {
       });
     });
   }).on('close', function () {
+    // io.emit('serverClosed',msgId);
     socket.emit(msgId, '\r\n*** SSH CONNECTION CLOSED ***\r\n');
   }).on('error', function (err) {
     console.log(err);
@@ -52,7 +54,7 @@ function createNewServer(machineConfig, socket) {
   }).connect({
     host: '47.100.180.85',
     port: 22, 
-    username: 'root',
+    username: 'root', 
     password: 'Admin123456'
   });
 }
@@ -72,3 +74,4 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, function () {
   console.log('listening on *:' + PORT);
 });
+ 

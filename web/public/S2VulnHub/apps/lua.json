@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "name": "lua",
+  "environment": {},
+  "software": {
+    "source": "github",
+    "user": "lua",
+    "repo": "lua"
+  },
+  "build": "sed -i '/^# TEST/a\\TESTS= -fsanitize=address' makefile\nmake -j"
+}
