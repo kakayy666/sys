@@ -2,10 +2,11 @@ const querystring = require('querystring')
 const express = require('express');
 const handleBlogRouter = require('./src/routes/blog')
 const handleLoginRouter = require('./src/routes/login')
+const handleformRouter = require('./src/routes/form')
 const app = express();
 const getPostData = (req) => {
     const promise = new Promise((resolve, reject) => {
-        if(req.method !== 'POST')
+        if(req.method !== 'POST') 
         {   
             resolve({})
             return
@@ -28,7 +29,7 @@ const getPostData = (req) => {
 }
 
 const serverHandler = (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:8080','http://47.100.180.85');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080','http://47.100.180.85');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // 允许 Authorization 头
     res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -82,7 +83,28 @@ getPostData(req).then((postData) => {
                 })
                 return
             }
+    }
+
+    if (req.path.startsWith('/api/form')) {
+        console.log('formsssss')
+        if (!token) {
+            res.writeHead(401, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Unauthorized - Token not provided' }));
+            return;
         }
+        // 处理form路由
+        const formDataPromise = handleformRouter(req, res)
+        console.log('formDataPromise',formDataPromise)
+        if (formDataPromise) {
+                formDataPromise.then(formData => {
+                    console.log('formData',formData)
+                    res.end(
+                        JSON.stringify(formData)
+                    )
+                })
+                return
+            }
+    }
         
             
        

@@ -24,3 +24,14 @@ export const Register = async (payload) => {
     throw error;
   }
 };
+
+// 向后端发送表单消息
+export const SendForm = async (payload) => {
+  try {
+    const response = await instance.post('/form/new', payload);
+    return response;
+  } catch (error) {
+    console.error('SendForm error:', error);
+    throw error;
+  }
+};

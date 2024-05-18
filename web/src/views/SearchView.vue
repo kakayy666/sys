@@ -105,14 +105,19 @@ onMounted(() => {
     background-color: #fdf7fe;
 }
 .commitform {
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 500px;
+    width: 800px;
+    max-width: 90%;
     height: 600px;
-    background-color: yellow;
+    max-height: 90%;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
     z-index: 999;
+    overflow: auto;
 }
 .user {
     position: absolute;
