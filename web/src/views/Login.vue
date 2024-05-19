@@ -76,6 +76,7 @@ export default {
         const form = reactive({
             username: "",
             password: "",
+            level:""
         });
         const registerForm = reactive({
             rusername: "",
@@ -86,7 +87,6 @@ export default {
         // 方法
         // 登录
         function login() {
-            console.log('form', form);
             Login(form)
                 .then(res => {
                     if (res.errno !== 0) {
@@ -95,11 +95,12 @@ export default {
                         localStorage.setItem("isLoggedIn", 0);
                         return;
                     }
-                    // console.log('发送数据成功:', res);
+                    console.log('发送数据成功:', res);
                     ElMessage.success('登录成功');
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("isLoggedIn", 1);
                     localStorage.setItem("username", form.username);
+                    localStorage.setItem("level",res.data.usr.level);
                     
                     router.push("/search");
                 })

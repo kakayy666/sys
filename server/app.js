@@ -3,6 +3,8 @@ const express = require('express');
 const handleBlogRouter = require('./src/routes/blog')
 const handleLoginRouter = require('./src/routes/login')
 const handleformRouter = require('./src/routes/form')
+const handleShowRouter = require('./src/routes/show')
+const handleUserRouter = require('./src/routes/user')
 const app = express();
 const getPostData = (req) => {
     const promise = new Promise((resolve, reject) => {
@@ -51,7 +53,15 @@ const serverHandler = (req, res) => {
 getPostData(req).then((postData) => {
 
     req.body = postData 
-        if (req.path.startsWith('/api/login')) { 
+    // 验证 token 的合法性
+      const token = req.headers['authorization'];
+    if (req.path.startsWith('/api/login')) { 
+            if (req.path === '/api/login/list') {
+            if (!token) {
+            res.writeHead(401, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Unauthorized - Token not provided' }));
+            return;
+        } }
             console.log('登录')
             console.log('req',req.body)
             const loginDataPromise = handleLoginRouter(req, res)
@@ -65,8 +75,6 @@ getPostData(req).then((postData) => {
                 return
             }
         }
-          const token = req.headers['authorization'];
-        // 验证 token 的合法性
     if (req.path.startsWith('/api/blog')) {
             if (!token) {
             res.writeHead(401, { 'Content-Type': 'application/json' });
@@ -97,6 +105,46 @@ getPostData(req).then((postData) => {
         if (formDataPromise) {
                 formDataPromise.then(formData => {
                     console.log('formData',formData)
+                    res.end(
+                        JSON.stringify(formData)
+                    )
+                })
+                return
+            }
+    }
+
+    if (req.path.startsWith('/api/show')) {
+        if (!token) {
+            res.writeHead(401, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Unauthorized - Token not provided' }));
+            return;
+        }
+        // 处理show路由
+        const showDataPromise = handleShowRouter(req, res)
+        console.log('showDataPromise',showDataPromise)
+        if (showDataPromise) {
+                showDataPromise.then(formData => {
+                    console.log('showData',formData)
+                    res.end(
+                        JSON.stringify(formData)
+                    )
+                })
+                return
+            }
+    }
+
+    if (req.path.startsWith('/api/user')) {
+        if (!token) {
+            res.writeHead(401, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Unauthorized - Token not provided' }));
+            return;
+        }
+        // 处理user路由
+        const userDataPromise = handleUserRouter(req, res)
+        console.log('userDataPromise',userDataPromise)
+        if (userDataPromise) { 
+                userDataPromise.then(formData => {
+                    console.log('userData',formData)
                     res.end(
                         JSON.stringify(formData)
                     )

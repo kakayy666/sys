@@ -32,7 +32,7 @@ const createNewForm = (postData) => {
             // 将命令数组转换为用 && 连接的字符串
             const command = commands.join(' && ');
 
-            exec(command, (error, stdout, stderr) => {
+            exec(command, (error, stdout, stderr) => { 
                 if (error) {
                     console.error(`Execution error: ${error}`);
                     // 为了安全性原则，数据库只进不出

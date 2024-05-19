@@ -1,40 +1,52 @@
 <template>
     <div class="bg" @click="formfalse"></div>
-    <div class="commitform" v-if="iscommit">
-        <Commit></Commit> 
+    <div class="overview" v-if="iscommit === 1">
+        <overview></overview>
     </div>
-            <div class="header">
-                CVE漏洞检索复现平台
-            </div>
-            <div class="user" @mouseenter="showDialog" @mouseleave="data.showLogout = false">
-                用户: <span class="username">{{ user }}</span>
-                <div class="dialog" v-if="data.showLogout">
-                    <span @click="exitbtn" style="cursor: pointer;">退出登录</span>
-                </div>
-            </div>
-            <div class="container">
-                <div class="title">S2Vulhub</div>
-                <div class="searchbar">
-                    <img src="../assets/search.png" class="mg" @click="search">
-                    <input type="text" id="search" v-model="keyword" placeholder="搜索CVE编号" @keyup.enter="search">
-                    <img src="/cse.ico" class="mcp">
-                </div>
-            </div>
+    <div class="commitform" v-if="iscommit === 2">
+        <Commit></Commit>
+    </div>
+    <div class="manageuser" v-if="iscommit === 3">
+        <ManageUser></ManageUser>
+    </div>
+    <div class="header">
+        CVE漏洞检索复现平台
+    </div>
+    <div class="user" @mouseenter="showDialog" @mouseleave="data.showLogout = false">
+        用户: <span class="username">{{ user }}</span>
+        <div class="dialog" v-if="data.showLogout">
+            <span @click="exitbtn" style="cursor: pointer;">退出登录</span>
+        </div>
+    </div>
+    <div class="container" @click="formfalse">
+        <div class="title">S2Vulhub</div>
+        <div class="searchbar">
+            <img src="../assets/search.png" class="mg" @click="search">
+            <input type="text" id="search" v-model="keyword" placeholder="搜索CVE编号" @keyup.enter="search">
+            <img src="/cse.ico" class="mcp">
+        </div>
+    </div>
 
-            <div class="apps">
-                <div class="choice">
-                    <div class="app-item">
-                        <img src="../assets/overlook.png" class="app-icon">
-                    </div>
-                    <div class="app-label">漏洞统计</div>
-                </div>
-                <div class="choice" @click="commitCVE">
-                    <div class="app-item">
-                        <img src="../assets/analysis.png" class="app-icon">
-                    </div>
-                    <div class="app-label">提交漏洞</div>
-                </div>
+    <div class="apps">
+        <div class="choice" @click="showView">
+            <div class="app-item">
+                <img src="../assets/overlook.png" class="app-icon">
             </div>
+            <div class="app-label">漏洞统计</div>
+        </div>
+        <div class="choice" @click="commitCVE" v-if="ulevel === 'admin'|| ulevel === 'developer'">
+            <div class="app-item">
+                <img src="../assets/analysis.png" class="app-icon">
+            </div>
+            <div class="app-label">提交漏洞</div>
+        </div>
+        <div class="choice" @click="manageUser" v-if="ulevel === 'admin'">
+            <div class="app-item">
+                <img src="../assets/team.png" class="app-icon">
+            </div>
+            <div class="app-label">管理用户</div>
+        </div>
+    </div>
 
 </template>
 
@@ -43,10 +55,13 @@ import { ref,reactive ,onMounted } from 'vue';
 import { ElMessage } from "element-plus";
 import { useRouter } from 'vue-router';
 import Commit from '../components/commit.vue';
+import overview from '../components/overview.vue';
+import ManageUser from '../components/manageu.vue';
 const router = useRouter();
 const keyword = ref('');
 const user = ref('');
-const iscommit = ref(false);
+const ulevel = ref('')
+const iscommit = ref(0);
 const data = reactive({
     showLogout: false,
 })
@@ -78,21 +93,28 @@ const exitbtn = () => {
     router.push('/login');
     localStorage.setItem("isLoggedIn", 0);
 }
-
+const showView = () => {
+    iscommit.value = 1;
+}
 const commitCVE = () => {
     console.log("click")
-    iscommit.value = !iscommit.value;
+    iscommit.value = 2;
+}
+const manageUser = () => {
+    iscommit.value = 3;
 }
 const formfalse = () => {
-    iscommit.value = false;
+    iscommit.value = 0;
 }
 
 onMounted(() => {
     user.value = localStorage.getItem('username');
     if (user.value.length > 5) {
         user.value = user.value.slice(0, 4) + '...';
-    
     }
+    // console.log('uu',user.value)
+    ulevel.value = localStorage.getItem('level');
+    // console.log('u',ulevel.value)
 })
 </script>
 
@@ -104,21 +126,53 @@ onMounted(() => {
     height: 100%;
     background-color: #fdf7fe;
 }
+.overview {
+    position: fixed;
+        top: 20%;
+            left: 50%;
+            transform: translate(-50%, 60px);
+        width: 1200px;
+        max-width: 80%;
+        height: 600px;
+        max-height: 80%;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+        overflow: hidden;
+}
 .commitform {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 20%;
+        left: 50%;
+        transform: translate(-50%, 60px);
     width: 800px;
     max-width: 90%;
     height: 600px;
     max-height: 90%;
-    background-color: #f2f2f2;
+    background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
     z-index: 999;
     overflow: auto;
 }
+
+.manageuser{
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%,60px);
+    width: 800px;
+    max-width: 90%;
+    height: 800px;
+    max-height: 60%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    overflow: hidden;
+}
+
 .user {
     position: absolute;
     font-size: 18px;

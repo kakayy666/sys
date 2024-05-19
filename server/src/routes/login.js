@@ -21,7 +21,7 @@ const handleLoginRouter = (req, res) => {
         
     }
     if(req.method==='POST' && req.path==='/api/login') 
-    {
+    {   
         const listData = getList();
         console.log('login', username, password)
         return listData.then((result) => {
@@ -33,7 +33,7 @@ const handleLoginRouter = (req, res) => {
              if (usr) {
                 // 用户验证成功，生成 JWT token
                 const token = jwt.sign({ id: usr.id, username: usr.username }, secretKey, { expiresIn: 3600 });
-                return new SuccessModel({ token });
+                return new SuccessModel({ token ,usr}); 
             } else {
                 return new ErrorModel('User not found or password incorrect');
             }
