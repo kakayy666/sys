@@ -103,7 +103,7 @@ export default {
 
       this.isConnected = false;
 
-      this.socket = io("http://localhost:3000");
+      this.socket = io("http://47.100.180.85:3000");
     },
     gobackhome() {
       this.delTerm();
@@ -111,7 +111,7 @@ export default {
     },
   },
   mounted() {
-    this.socket = io("http://localhost:3000");
+    this.socket = io("http://47.100.180.85:3000");
     this.socket.on("serverClosed", (data) => {
       console.log("serverClosed", data);
       const termbox = document.querySelector(".termbox");
@@ -121,7 +121,7 @@ export default {
 
       this.isConnected = false;
 
-      this.socket = io("http://localhost:3000");
+      this.socket = io("http://47.100.180.85:3000");
     })
   }
 };
