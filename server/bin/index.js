@@ -21,7 +21,7 @@ function createNewServer(machineConfig, socket) {
       }
       // 要执行的命令数组
       const commands = [
-        'cd S2VulnHub',
+        'cd /data/s2v/dist/S2VulnHub',
         `bash test.sh ${CVEid}`,
         'clear'
       ];

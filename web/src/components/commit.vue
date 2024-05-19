@@ -92,7 +92,7 @@ const submitForm = async (formEl) => {
         if (valid) {
             console.log('submit!');
             console.log(ruleForm);
-            // SendForm(ruleForm);
+            SendForm(ruleForm);
             ElMessage.success('提交成功');
 
         } else {
