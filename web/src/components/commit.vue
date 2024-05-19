@@ -88,18 +88,23 @@ const rules = reactive({
 
 const submitForm = async (formEl) => {
     if (!formEl) return;
-    await formEl.validate((valid, fields) => {
+    await formEl.validate(async (valid, fields) => {
         if (valid) {
             console.log('submit!');
             console.log(ruleForm);
-            SendForm(ruleForm);
-            ElMessage.success('提交成功');
-
+            const status = await SendForm(ruleForm);
+            console.log('s', status)
+            if (status.data === 'success') {
+                ElMessage.success('提交成功');
+            } else {
+                ElMessage.error('提交失败');
+            }
         } else {
             console.log('error submit!', fields);
         }
     });
 };
+
 
 const resetForm = (formEl) => {
     if (!formEl) return;

@@ -86,7 +86,6 @@ getPostData(req).then((postData) => {
     }
 
     if (req.path.startsWith('/api/form')) {
-        console.log('formsssss')
         if (!token) {
             res.writeHead(401, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Unauthorized - Token not provided' }));
