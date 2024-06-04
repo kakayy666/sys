@@ -7,6 +7,10 @@ const serverHandler = require('../app')
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, { cors: true });
+const fs = require('fs');
+const path = require('path');
+const privateKeyPath = path.resolve(__dirname, 'rsa');
+const privateKey = fs.readFileSync(privateKeyPath);
 
 function createNewServer(machineConfig, socket) {
   const ssh = new SSHClient();
@@ -52,10 +56,11 @@ function createNewServer(machineConfig, socket) {
     console.log(err);
     socket.emit(msgId, '\r\n*** SSH CONNECTION ERROR: ' + err.message + ' ***\r\n');
   }).connect({
-    host: '47.100.180.85',
+    host: '154.197.56.22',
     port: 22, 
     username: 'root', 
-    password: 'Admin123456'
+    // password:'Admin123456'
+    privateKey: privateKey
   });
 }
 

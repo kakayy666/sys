@@ -15,6 +15,7 @@ const createNewForm = (postData) => {
         }
         };
         // web/public/S2VulnHub/user_cve
+        // /data/s2v/dist/S2VulnHub/user_cve/
         const jsonData = JSON.stringify(newFormData, null, 2);
         const filePath = `/Users/s2v/dist/S2VulnHub/user_cve/${postData.id}.json`;
         fs.writeFile(filePath, jsonData, (err) => {

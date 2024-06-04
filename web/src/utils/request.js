@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken } from './storage';
 
 
-const API_HOST = 'http://127.0.0.1:3000/api'
+const API_HOST = 'http://154.197.56.22:3000/api'
 
 const SUCCESS_CODE = 200;
 const TIMEOUT = 10000;

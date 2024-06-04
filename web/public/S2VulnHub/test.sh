@@ -7,7 +7,7 @@ fi
 
 CVE=$1
 
-python cli.py reproduce -C ${CVE}
+python3 cli.py reproduce -C ${CVE}
 
 # if [ ! -f "./Dockerfile/${CVE}" ]; then
 #     python cli.py reproduce -C ${CVE}

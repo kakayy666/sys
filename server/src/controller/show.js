@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const directoryPath ='/Users/s2v/dist/S2VulnHub/user_cve'
+const directoryPath ='/data/s2v/dist/S2VulnHub/user_cve'
 const getshowList = () => {
     return new Promise((resolve, reject) => {
         // 创建一个空对象用于存储category计数

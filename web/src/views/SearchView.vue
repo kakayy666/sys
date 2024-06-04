@@ -12,6 +12,27 @@
     <div class="header">
         CVE漏洞检索复现平台
     </div>
+
+    <div class="apps2">
+        <div class="choice" @click="showView">
+            <div class="app-item">
+                <img src="../assets/overlook.png" class="app-icon">
+            </div>
+            <div class="app-label">漏洞统计</div>
+        </div>
+        <div class="choice" @click="commitCVE" v-if="ulevel === 'admin' || ulevel === 'developer'">
+            <div class="app-item">
+                <img src="../assets/analysis.png" class="app-icon">
+            </div>
+            <div class="app-label">提交漏洞</div>
+        </div>
+        <div class="choice" @click="manageUser" v-if="ulevel === 'admin'">
+            <div class="app-item">
+                <img src="../assets/team.png" class="app-icon">
+            </div>
+            <div class="app-label">管理用户</div>
+        </div>
+    </div>
     <div class="user" @mouseenter="showDialog" @mouseleave="data.showLogout = false">
         用户: <span class="username">{{ user }}</span>
         <div class="dialog" v-if="data.showLogout">
@@ -27,26 +48,6 @@
         </div>
     </div>
 
-    <div class="apps">
-        <div class="choice" @click="showView">
-            <div class="app-item">
-                <img src="../assets/overlook.png" class="app-icon">
-            </div>
-            <div class="app-label">漏洞统计</div>
-        </div>
-        <div class="choice" @click="commitCVE" v-if="ulevel === 'admin'|| ulevel === 'developer'">
-            <div class="app-item">
-                <img src="../assets/analysis.png" class="app-icon">
-            </div>
-            <div class="app-label">提交漏洞</div>
-        </div>
-        <div class="choice" @click="manageUser" v-if="ulevel === 'admin'">
-            <div class="app-item">
-                <img src="../assets/team.png" class="app-icon">
-            </div>
-            <div class="app-label">管理用户</div>
-        </div>
-    </div>
 
 </template>
 
@@ -281,14 +282,24 @@ onMounted(() => {
     /* gap: 40px; */
 }
 
+.apps2{
+    position: absolute;
+    width: auto;
+    right: 140px;
+    height: 100px;
+    display: flex;
+    gap: 20px;
+
+}
+
 .choice{
     background-color: transparent;
-    padding: 20px;
     width: 80px;
+    height: 80px;
 }
 .choice:hover{
     cursor: pointer;
-    background-color: #e7e0eb;
+    /* background-color: #e7e0eb; */
 }
 
 .app-item {
@@ -296,10 +307,10 @@ onMounted(() => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     margin-top: -5px;
-    margin-left: 6px;
+    margin-left: 16px;
     padding: 2px;
     border-radius: 50%;
     background-color: #fff;
@@ -308,7 +319,7 @@ onMounted(() => {
 
 
 .app-icon {
-    width: 50px;
+    width: 30px;
     height: auto;
 }
 
